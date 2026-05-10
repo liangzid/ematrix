@@ -1,6 +1,8 @@
 #+TITLE: EMatrix
 #+AUTHOR: Zi Liang
 
+[[file:./images/screenshot_20260510_164629.png]]
+
 [[file:./images/screenshot_20260510_163951.png]]
 
 An Emacs theme replicating the [[https://github.com/anomalyco/opencode][OpenCode]] "Matrix" color scheme.
