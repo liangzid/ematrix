@@ -1,50 +1,42 @@
 #+TITLE: EMatrix
 #+AUTHOR: Zi Liang
 
-[[file:./images/screenshot_20260510_164629.png]]
+EMatrix is a restrained dark theme for Emacs.  It uses a neutral graphite
+canvas, soft high-contrast text, and a compact semantic accent palette.  The
+theme is intended for long programming, research-writing, and mixed Latin/CJK
+sessions rather than a decorative terminal aesthetic.
 
-[[file:./images/screenshot_20260510_163951.png]]
+* Design Principles
 
-An Emacs theme replicating the [[https://github.com/anomalyco/opencode][OpenCode]] "Matrix" color scheme.
+- Neutral text carries content.  Accent colors carry meaning.
+- Background elevation distinguishes windows and popups without visible boxes.
+- Comments remain readable instead of fading into the background.
+- Warnings, errors, selections, and diffs are distinct under prolonged use.
+- Org, Markdown, and LaTeX share one document hierarchy.
+- Package faces reuse the same semantic colors instead of inventing local ones.
 
-Dark green-tinted background with bright green foreground, purple keywords,
-teal functions, orange constants — the classic Matrix hacker aesthetic from
-the OpenCode terminal UI.
+* Palette
 
-* Color Palette
-
-Sourced from =packages/ui/src/theme/themes/matrix.json= in the OpenCode repository.
-
-| Role         | Hex       |
-|--------------+-----------|
-| Background   | =#0a0e0a= |
-| Foreground   | =#62ff94= |
-| Comment      | =#8ca391= |
-| Keyword      | =#c770ff= |
-| String       | =#1cc24b= |
-| Function     | =#24f6d9= |
-| Type         | =#e6ff57= |
-| Constant     | =#ffa83d= |
-| Primitive    | =#30b3ff= |
-| Error        | =#ff4b4b= |
-| Warning      | =#e6ff57= |
-| Link         | =#30b3ff= |
-| Diff added   | =#77ffaf= |
-| Diff removed | =#ff7171= |
-| Mode-line    | =#0e120e= |
-
-*Org heading colors:*
-
-| Level | Hex       |
-|-------+-----------|
-|     1 | =#00efff= |
-|     2 | =#e6ff57= |
-|     3 | =#24f6d9= |
-|     4 | =#c770ff= |
-|     5 | =#30b3ff= |
-|     6 | =#ffa83d= |
-|     7 | =#1cc24b= |
-|     8 | =#8ca391= |
+| Role                 | Hex       |
+|----------------------+-----------|
+| Main background      | =#111318= |
+| Surface              | =#161920= |
+| Raised surface       | =#1C2029= |
+| Active surface       | =#252B38= |
+| Selection            | =#2D3749= |
+| Main text            | =#D6D9E0= |
+| Strong text          | =#ECEEF2= |
+| Muted text           | =#9AA2B1= |
+| Subtle text          | =#697282= |
+| Red                  | =#E27878= |
+| Orange               | =#D5A06B= |
+| Yellow               | =#D8BE7B= |
+| Green                | =#8FBE83= |
+| Teal                 | =#77BEB7= |
+| Cyan                 | =#79B8D1= |
+| Blue                 | =#82A7E8= |
+| Purple               | =#B49ADD= |
+| Magenta              | =#CA8FAF= |
 
 * Installation
 
@@ -60,10 +52,9 @@ Sourced from =packages/ui/src/theme/themes/matrix.json= in the OpenCode reposito
 #+begin_src emacs-lisp
 (use-package ematrix
   :vc (:url "https://github.com/liangzid/ematrix"
-        :rev :newest)
+       :rev :newest)
   :config
-  (load-theme 'ematrix t)
-  (ematrix-set-font))
+  (ematrix-enable))
 #+end_src
 
 ** Manual
@@ -73,81 +64,55 @@ git clone https://github.com/liangzid/ematrix ~/.emacs.d/elpa/ematrix
 #+end_src
 
 #+begin_src emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/elpa/ematrix")
 (require 'ematrix)
-(load-theme 'ematrix t)
+(ematrix-enable)
 #+end_src
 
-* Font
+* Typography
 
-EMatrix matches the [[https://github.com/anomalyco/opencode/blob/dev/packages/console/app/src/style/token/font.css][OpenCode font stack]]:
+EMatrix selects the first installed monospace family from this stack:
 
-| Priority | Font           | License                 |
-|----------+----------------+-------------------------|
-|        1 | Berkeley Mono  | Commercial ($75)        |
-|        2 | IBM Plex Mono  | Open Source (SIL OFL)   |
-|        3 | Cascadia Code  | Open Source (SIL OFL)   |
-|        4 | Fira Code      | Open Source (SIL OFL)   |
-|        5 | JetBrains Mono | Open Source (SIL OFL)   |
+1. Maple Mono
+2. JetBrainsMono Nerd Font Mono
+3. IBM Plex Mono
+4. Cascadia Code
+5. Iosevka
+6. Fira Code
 
-The first font found on your system is used automatically. On most Linux
-systems, installing =fonts-ibm-plex= is the quickest way to get a close match:
+The default size is 14 points.  Noto Sans CJK SC is used for CJK characters,
+and a neutral sans-serif stack is assigned to =variable-pitch=.
 
-#+begin_src bash
-# Debian/Ubuntu
-sudo apt install fonts-ibm-plex
-
-# Arch
-sudo pacman -S ttf-ibm-plex
-
-# macOS
-brew install font-ibm-plex
-#+end_src
-
-Set the font manually with =M-x ematrix-set-font=, or call it from your init:
+Customize the font before enabling the theme:
 
 #+begin_src emacs-lisp
-(setq ematrix-default-font-size 14)
-(ematrix-set-font)
+(setq ematrix-default-font "Maple Mono"
+      ematrix-default-font-size 14
+      ematrix-cjk-font "Noto Sans CJK SC")
+(ematrix-enable)
 #+end_src
 
-Override with a custom font:
+=ematrix-set-font= updates existing graphical frames and the default for new
+frames.  =ematrix-apply-font-to-frame= can be used by a custom frame hook.
 
-#+begin_src emacs-lisp
-(setq ematrix-default-font "Cascadia Code")
-(setq ematrix-default-font-size 13)
-(ematrix-set-font)
-#+end_src
+* Face Coverage
 
-The CJK font defaults to *LXGW WenKai Mono*. Change it:
+- Emacs interface, syntax, search, widgets, tabs, and line numbers
+- Company, Ivy, Vertico, Orderless, Marginalia, and Which Key
+- Org, Org Agenda, Org Habit, Markdown, LaTeX, and AUCTeX
+- Dired and Neotree
+- Diff, Ediff, Magit, and Git Gutter
+- Flymake, Flycheck, compilation, grep, xref, Eglot, and Citre
+- Doom Modeline, Evil, Winum, Rainbow Delimiters, and indentation guides
+- Eshell, Term, ANSI colors, Yasnippet, SLY, CIDER, and Telega
 
-#+begin_src emacs-lisp
-(setq ematrix-chinese-font "Noto Serif CJK SC")
-#+end_src
-
-* Supported Packages
-
-EMatrix provides faces for:
-
-- *Syntax*: =font-lock=, =rainbow-delimiters=, =highlight-indentation=
-- *Completion*: =company=, =vertico=, =ivy=, =marginalia=
-- *Org Mode*: headings, blocks, code, links, tags, todos, agenda, checkboxes
-- *Markdown*: headings, code, links, blockquotes, emphasis
-- *Version Control*: =diff=, =magit=, =git-gutter=
-- *UI*: =mode-line=, =doom-modeline=, =tab-bar=, =tab-line=
-- *Tools*: =eglot=, =citre=, =evil=, =telega=, =hl-line=
-- *Terminal*: =term=, =ansi-color=
-
-* File Structure
+* Files
 
 #+begin_example
 ematrix/
-├── ematrix.el          # Package entry point, font setup, customization
-└── ematrix-theme.el    # deftheme with 130+ face definitions
+├── ematrix.el          # Package entry point and typography
+└── ematrix-theme.el    # Palette and face definitions
 #+end_example
-
-* Credits
-
-Color scheme sourced from [[https://github.com/anomalyco/opencode][OpenCode]] by AnomalyCo, used under the MIT license.
 
 * License
 
